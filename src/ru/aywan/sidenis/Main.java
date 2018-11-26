@@ -79,7 +79,7 @@ class MatrixSummator {
 }
 
 class Reader {
-    final private int BUFFER_SIZE = 1 << 18;
+    final private int BUFFER_SIZE = 1 << 19;
     private DataInputStream din;
     private byte[] buffer;
     private int bufferPointer, bytesRead;
