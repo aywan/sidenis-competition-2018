@@ -23,17 +23,14 @@ class MatrixSummator {
 
     private final int size;
     private final long[][] mtSum;
-    private final long[][] mt;
 
     MatrixSummator(int size, Reader r) throws IOException {
         this.size = size + 1;
         this.mtSum = new long[this.size][this.size];
-        this.mt = new long[this.size][this.size];
 
         for (int i = 1; i < this.size; i++) {
             for (int j = 1; j < this.size; j++) {
-                this.mt[j][i] = r.nextLong();
-                this.mtSum[j][i] = this.mt[j][i] + this.mtSum[j][i - 1];
+                this.mtSum[j][i] = r.nextLong() + this.mtSum[j][i - 1];
             }
         }
     }
@@ -73,8 +70,7 @@ class MatrixSummator {
         x++;
         y++;
 
-        long diff = val - this.mt[x][y];
-        this.mt[x][y] = val;
+        long diff = val - this.mtSum[x][y] + this.mtSum[x][y - 1];
 
         for (int i = y; i < this.size; i++) {
             this.mtSum[x][i] += diff;
@@ -83,7 +79,7 @@ class MatrixSummator {
 }
 
 class Reader {
-    final private int BUFFER_SIZE = 1 << 16;
+    final private int BUFFER_SIZE = 1 << 18;
     private DataInputStream din;
     private byte[] buffer;
     private int bufferPointer, bytesRead;
@@ -103,17 +99,12 @@ class Reader {
             c = this.read();
         }
 
-        boolean neg = (c == '-');
-        if (neg) {
-            c = this.read();
-        }
-
         do {
             ret = ret * 10 + c - '0';
             c = this.read();
         } while (c >= '0' && c <= '9');
 
-        return neg ? -ret : ret;
+        return ret;
     }
 
     long nextLong() throws IOException {
