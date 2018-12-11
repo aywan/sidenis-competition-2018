@@ -7,73 +7,55 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         Reader r = new Reader();
-        int size = r.nextInt();
-        MatrixSummator s = new MatrixSummator(size, r);
-        int opCount = r.nextInt();
-        for (int k = 0; k < opCount; k++) {
-            s.readOp(r);
-        }
-        r.close();
-    }
-}
+        int size = r.nextInt() + 1;
 
-class MatrixSummator {
-    private static final int MOD = 2;
-    private static final int SUM = 1;
+        long[][] mt = new long[size][size];
 
-    private final int size;
-    private final long[][] mtSum;
-
-    MatrixSummator(int size, Reader r) throws IOException {
-        this.size = size + 1;
-        this.mtSum = new long[this.size][this.size];
-
-        for (int i = 1; i < this.size; i++) {
-            for (int j = 1; j < this.size; j++) {
-                this.mtSum[j][i] = r.nextLong() + this.mtSum[j][i - 1];
+        for (int i = 1; i < size; i++) {
+            for (int j = 1; j < size; j++) {
+                mt[j][i] = r.nextLong() + mt[j][i - 1];
             }
         }
-    }
 
-    void readOp(Reader r) throws IOException {
-        int op = r.nextInt();
+        int opCount = r.nextInt();
 
-        switch (op) {
-            case MOD:
-                this.modValue(r.nextInt(), r.nextInt(), r.nextLong());
-                break;
+        int x1, y1, x2, y2, op;
+        long val;
 
-            case SUM:
-                this.printSum(r.nextInt(), r.nextInt(), r.nextInt(), r.nextInt());
-                break;
-        }
-    }
+        for (int k = 0; k < opCount; k++) {
+            op = r.nextInt();
 
-    void printSum(int x1, int y1, int x2, int y2) {
-        System.out.println(this.getSum(x1, y1, x2, y2));
-    }
+            switch (op) {
 
-    long getSum(int x1, int y1, int x2, int y2) {
-        x2++;
-        y2++;
+                case 2:
 
-        long sum = 0;
+                    x1 = r.nextInt() + 1;
+                    y1 = r.nextInt() + 1;
+                    val = r.nextLong() - mt[x1][y1] + mt[x1][y1 - 1];
 
-        for (int i = x1 + 1; i <= x2; i++) {
-            sum += this.mtSum[i][y2] - this.mtSum[i][y1];
-        }
+                    for (int i = y1; i < size; i++) {
+                        mt[x1][i] += val;
+                    }
 
-        return sum;
-    }
+                    break;
 
-    void modValue(int x, int y, long val) {
-        x++;
-        y++;
+                case 1:
 
-        long diff = val - this.mtSum[x][y] + this.mtSum[x][y - 1];
+                    x1 = r.nextInt();
+                    y1 = r.nextInt();
 
-        for (int i = y; i < this.size; i++) {
-            this.mtSum[x][i] += diff;
+                    x2 = r.nextInt() + 1;
+                    y2 = r.nextInt() + 1;
+
+                    val = 0;
+
+                    for (int i = x1 + 1; i <= x2; i++) {
+                        val += mt[i][y2] - mt[i][y1];
+                    }
+
+                    System.out.println(val);
+                    break;
+            }
         }
     }
 }
@@ -142,11 +124,5 @@ class Reader {
         }
         return this.buffer[this.bufferPointer++];
     }
-
-    void close() throws IOException {
-        if (this.din == null) {
-            return;
-        }
-        this.din.close();
-    }
 }
+

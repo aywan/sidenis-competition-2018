@@ -1,0 +1,2 @@
+javac -d ./out src/ru/aywan/sidenis/Main.java
+time (cat bigin.txt | java -Xmx256M -Xms16M -Xbatch -XX:+UseSerialGC -XX:-TieredCompilation -XX:CICompilerCount=1 -cp out ru/aywan/sidenis/Main > /dev/null)
