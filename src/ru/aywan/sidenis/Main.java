@@ -8,25 +8,25 @@ import java.io.PrintWriter;
 public class Main {
 
     final static private int BUFFER_SIZE = 1 << 13;
-    static private DataInputStream din;
     static private byte[] buffer;
     static private int bufferPointer = 0, bytesRead = 0;
-
-    private static int x1, y1, x2, y2;
-    private static long val;
+    static private long[][] mt;
 
     public static void main(String[] args) throws IOException {
-        din = new DataInputStream(System.in);
         buffer = new byte[BUFFER_SIZE];
-        PrintWriter w = new PrintWriter(new BufferedOutputStream(System.out, BUFFER_SIZE));
+        BufferedOutputStream w = new BufferedOutputStream(System.out, BUFFER_SIZE);
 
         int size = nextInt() + 1;
+        mt = new long[size][size];
 
-        long[][] mt = new long[size][size];
+        int x1, y1, x2, y2;
+        long val;
 
         for (int i = 1; i < size; i++) {
+            val = 0;
             for (int j = 1; j < size; j++) {
-                mt[j][i] = nextLong() + mt[j][i - 1];
+                val += nextLong();
+                mt[i][j] = val;
             }
         }
 
@@ -37,8 +37,8 @@ public class Main {
 
                 case 2:
 
-                    x1 = nextInt() + 1;
                     y1 = nextInt() + 1;
+                    x1 = nextInt() + 1;
                     val = nextLong() - mt[x1][y1] + mt[x1][y1 - 1];
 
                     for (int i = y1; i < size; i++) {
@@ -49,11 +49,11 @@ public class Main {
 
                 case 1:
 
-                    x1 = nextInt();
                     y1 = nextInt();
+                    x1 = nextInt();
 
-                    x2 = nextInt() + 1;
                     y2 = nextInt() + 1;
+                    x2 = nextInt() + 1;
 
                     val = 0;
 
@@ -61,7 +61,8 @@ public class Main {
                         val += mt[i][y2] - mt[i][y1];
                     }
 
-                    w.println(val);
+                    w.write(String.valueOf(val).getBytes());
+                    w.write('\n');
                     break;
             }
         }
@@ -108,10 +109,7 @@ public class Main {
 
     private static void fillBuffer() throws IOException {
         bufferPointer = 0;
-        bytesRead = din.read(buffer, 0, BUFFER_SIZE);
-        if (bytesRead == -1) {
-            buffer[0] = -1;
-        }
+        bytesRead = System.in.read(buffer,0, BUFFER_SIZE);
     }
 
     private static byte read() throws IOException {
