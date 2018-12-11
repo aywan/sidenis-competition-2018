@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         Reader r = new Reader();
-        PrintWriter w = new PrintWriter(new BufferedOutputStream(System.out, 1 << 10));
+        PrintWriter w = new PrintWriter(new BufferedOutputStream(System.out, 1 << 13));
 
         int size = r.nextInt() + 1;
 
@@ -65,7 +65,7 @@ public class Main {
 }
 
 class Reader {
-    final private int BUFFER_SIZE = 1 << 16;
+    final private int BUFFER_SIZE = 1 << 13;
     private DataInputStream din;
     private byte[] buffer;
     private int bufferPointer, bytesRead;
