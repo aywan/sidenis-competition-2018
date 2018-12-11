@@ -7,33 +7,39 @@ import java.io.PrintWriter;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
-        Reader r = new Reader();
-        PrintWriter w = new PrintWriter(new BufferedOutputStream(System.out, 1 << 13));
+    final static private int BUFFER_SIZE = 1 << 13;
+    static private DataInputStream din;
+    static private byte[] buffer;
+    static private int bufferPointer = 0, bytesRead = 0;
 
-        int size = r.nextInt() + 1;
+    private static int x1, y1, x2, y2;
+    private static long val;
+
+    public static void main(String[] args) throws IOException {
+        din = new DataInputStream(System.in);
+        buffer = new byte[BUFFER_SIZE];
+        PrintWriter w = new PrintWriter(new BufferedOutputStream(System.out, BUFFER_SIZE));
+
+        int size = nextInt() + 1;
 
         long[][] mt = new long[size][size];
 
         for (int i = 1; i < size; i++) {
             for (int j = 1; j < size; j++) {
-                mt[j][i] = r.nextLong() + mt[j][i - 1];
+                mt[j][i] = nextLong() + mt[j][i - 1];
             }
         }
 
-        int q = r.nextInt();
+        int q = nextInt();
 
-        int x1, y1, x2, y2;
-        long val;
-
-        for (int k = 0; k < q; k++) {
-            switch (r.nextInt()) {
+        for (int j = 0; j < q; j++) {
+            switch (nextInt()) {
 
                 case 2:
 
-                    x1 = r.nextInt() + 1;
-                    y1 = r.nextInt() + 1;
-                    val = r.nextLong() - mt[x1][y1] + mt[x1][y1 - 1];
+                    x1 = nextInt() + 1;
+                    y1 = nextInt() + 1;
+                    val = nextLong() - mt[x1][y1] + mt[x1][y1 - 1];
 
                     for (int i = y1; i < size; i++) {
                         mt[x1][i] += val;
@@ -43,11 +49,11 @@ public class Main {
 
                 case 1:
 
-                    x1 = r.nextInt();
-                    y1 = r.nextInt();
+                    x1 = nextInt();
+                    y1 = nextInt();
 
-                    x2 = r.nextInt() + 1;
-                    y2 = r.nextInt() + 1;
+                    x2 = nextInt() + 1;
+                    y2 = nextInt() + 1;
 
                     val = 0;
 
@@ -62,70 +68,56 @@ public class Main {
 
         w.flush();
     }
-}
 
-class Reader {
-    final private int BUFFER_SIZE = 1 << 13;
-    private DataInputStream din;
-    private byte[] buffer;
-    private int bufferPointer, bytesRead;
-
-    Reader() {
-        this.din = new DataInputStream(System.in);
-        this.buffer = new byte[this.BUFFER_SIZE];
-        this.bufferPointer = 0;
-        this.bytesRead = 0;
-    }
-
-    int nextInt() throws IOException {
+    private static int nextInt() throws IOException {
         int ret = 0;
-        byte c = this.read();
+        byte c = read();
 
         while (c <= ' ') {
-            c = this.read();
+            c = read();
         }
 
         do {
             ret = ret * 10 + c - '0';
-            c = this.read();
+            c = read();
         } while (c >= '0' && c <= '9');
 
         return ret;
     }
 
-    long nextLong() throws IOException {
+    private static long nextLong() throws IOException {
         long ret = 0;
-        byte c = this.read();
+        byte c = read();
 
         while (c <= ' ') {
-            c = this.read();
+            c = read();
         }
 
         boolean neg = (c == '-');
         if (neg) {
-            c = this.read();
+            c = read();
         }
 
         do {
             ret = ret * 10 + c - '0';
-            c = this.read();
+            c = read();
         } while (c >= '0' && c <= '9');
 
         return neg ? -ret : ret;
     }
 
-    private void fillBuffer() throws IOException {
-        this.bufferPointer = 0;
-        this.bytesRead = this.din.read(this.buffer, 0, this.BUFFER_SIZE);
-        if (this.bytesRead == -1) {
-            this.buffer[0] = -1;
+    private static void fillBuffer() throws IOException {
+        bufferPointer = 0;
+        bytesRead = din.read(buffer, 0, BUFFER_SIZE);
+        if (bytesRead == -1) {
+            buffer[0] = -1;
         }
     }
 
-    private byte read() throws IOException {
-        if (this.bufferPointer == this.bytesRead) {
-            this.fillBuffer();
+    private static byte read() throws IOException {
+        if (bufferPointer == bytesRead) {
+            fillBuffer();
         }
-        return this.buffer[this.bufferPointer++];
+        return buffer[bufferPointer++];
     }
 }
