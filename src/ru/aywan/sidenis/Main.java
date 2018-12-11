@@ -23,13 +23,11 @@ public class Main {
 
         int q = r.nextInt();
 
-        int x1, y1, x2, y2, op;
+        int x1, y1, x2, y2;
         long val;
 
         for (int k = 0; k < q; k++) {
-            op = r.nextInt();
-
-            switch (op) {
+            switch (r.nextInt()) {
 
                 case 2:
 
