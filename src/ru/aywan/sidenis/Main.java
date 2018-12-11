@@ -1,12 +1,16 @@
 package ru.aywan.sidenis;
 
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
         Reader r = new Reader();
+        PrintWriter w = new PrintWriter(new BufferedOutputStream(System.out, 1 << 10));
+
         int size = r.nextInt() + 1;
 
         long[][] mt = new long[size][size];
@@ -17,12 +21,12 @@ public class Main {
             }
         }
 
-        int opCount = r.nextInt();
+        int q = r.nextInt();
 
         int x1, y1, x2, y2, op;
         long val;
 
-        for (int k = 0; k < opCount; k++) {
+        for (int k = 0; k < q; k++) {
             op = r.nextInt();
 
             switch (op) {
@@ -53,15 +57,17 @@ public class Main {
                         val += mt[i][y2] - mt[i][y1];
                     }
 
-                    System.out.println(val);
+                    w.println(val);
                     break;
             }
         }
+
+        w.flush();
     }
 }
 
 class Reader {
-    final private int BUFFER_SIZE = 1 << 19;
+    final private int BUFFER_SIZE = 1 << 16;
     private DataInputStream din;
     private byte[] buffer;
     private int bufferPointer, bytesRead;
@@ -125,4 +131,3 @@ class Reader {
         return this.buffer[this.bufferPointer++];
     }
 }
-
