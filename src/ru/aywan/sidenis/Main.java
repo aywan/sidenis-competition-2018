@@ -8,8 +8,8 @@ public class Main {
 
     static private byte[] iBuffer;
     static private byte[] oBuffer;
-    static private int bufferPointer = 0, bytesRead = 0;
-    static private int oBufSize = 0;
+    static private int iBufPoint = 0;
+    static private int oBufPoint = 0;
     static private long[][] mt = new long[551][551];
 
     public static void main(String[] args) throws IOException {
@@ -70,20 +70,35 @@ public class Main {
 
     private static void writeln(long v)
     {
-        byte[] s = String.valueOf(v).getBytes();
-        if (oBufSize + s.length + 1 >= BUFFER_SIZE) {
+        int c = 0;
+        byte[] s = new byte[20];
+        boolean neg = v < 0;
+        if (neg) {
+            v = -v;
+        }
+
+        while (v > 0) {
+            s[c++] = (byte)(v % 10 + '0');
+            v = v / 10;
+        }
+        if (neg) {
+            s[c++] = '-';
+        }
+
+        if (oBufPoint + c + 1 >= BUFFER_SIZE) {
             flush();
         }
-        System.arraycopy(s, 0, oBuffer, oBufSize, s.length);
-        oBufSize += s.length;
-        oBuffer[oBufSize++] = '\n';
 
+        for (int i = c - 1; i >= 0; i--) {
+            oBuffer[oBufPoint++] = s[i];
+        }
+        oBuffer[oBufPoint++] = '\n';
     }
 
     private static void flush()
     {
-        System.out.write(oBuffer, 0, oBufSize);
-        oBufSize = 0;
+        System.out.write(oBuffer, 0, oBufPoint);
+        oBufPoint = 0;
     }
 
     private static int nextInt() throws IOException {
@@ -124,14 +139,14 @@ public class Main {
     }
 
     private static void fillBuffer() throws IOException {
-        bufferPointer = 0;
-        bytesRead = System.in.read(iBuffer,0, BUFFER_SIZE);
+        iBufPoint = 0;
+        System.in.read(iBuffer,0, BUFFER_SIZE);
     }
 
     private static byte read() throws IOException {
-        if (bufferPointer == bytesRead) {
+        if (iBufPoint == BUFFER_SIZE) {
             fillBuffer();
         }
-        return iBuffer[bufferPointer++];
+        return iBuffer[iBufPoint++];
     }
 }
