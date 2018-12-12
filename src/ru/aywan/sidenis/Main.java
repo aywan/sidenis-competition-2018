@@ -6,15 +6,14 @@ public class Main {
 
     final static private int BUFFER_SIZE = 1 << 13;
 
-    static private byte[] iBuffer;
-    static private byte[] oBuffer;
+    static private byte[] iBuffer = new byte[BUFFER_SIZE];
+    static private byte[] oBuffer = new byte[BUFFER_SIZE];
+    static private byte[] itoaBuf = new byte[20];
     static private int iBufPoint = 0;
     static private int oBufPoint = 0;
     static private long[][] mt = new long[551][551];
 
     public static void main(String[] args) throws IOException {
-        iBuffer = new byte[BUFFER_SIZE];
-        oBuffer = new byte[BUFFER_SIZE];
 
         int size = nextInt() + 1;
 
@@ -70,28 +69,27 @@ public class Main {
 
     private static void writeln(long v)
     {
+        int p = 19;
         int c = 0;
-        byte[] s = new byte[20];
         boolean neg = v < 0;
         if (neg) {
             v = -v;
         }
-
         while (v > 0) {
-            s[c++] = (byte)(v % 10 + '0');
+            itoaBuf[p--] = (byte)(v % 10 + '0');
             v = v / 10;
+            c++;
         }
         if (neg) {
-            s[c++] = '-';
+            itoaBuf[p--] = '-';
+            c++;
         }
 
         if (oBufPoint + c + 1 >= BUFFER_SIZE) {
             flush();
         }
-
-        for (int i = c - 1; i >= 0; i--) {
-            oBuffer[oBufPoint++] = s[i];
-        }
+        System.arraycopy(itoaBuf, p + 1, oBuffer, oBufPoint, c);
+        oBufPoint += c;
         oBuffer[oBufPoint++] = '\n';
     }
 
