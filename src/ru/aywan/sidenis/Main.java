@@ -1,23 +1,21 @@
 package ru.aywan.sidenis;
 
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 public class Main {
 
     final static private int BUFFER_SIZE = 1 << 13;
     static private byte[] buffer;
+    static private byte[] obuffer;
     static private int bufferPointer = 0, bytesRead = 0;
-    static private long[][] mt;
+    static private int oBufSize = 0;
 
     public static void main(String[] args) throws IOException {
         buffer = new byte[BUFFER_SIZE];
-        BufferedOutputStream w = new BufferedOutputStream(System.out, BUFFER_SIZE);
+        obuffer = new byte[BUFFER_SIZE];
 
         int size = nextInt() + 1;
-        mt = new long[size][size];
+        long[][] mt = new long[size][size];
 
         int x1, y1, x2, y2;
         long val;
@@ -61,13 +59,30 @@ public class Main {
                         val += mt[i][y2] - mt[i][y1];
                     }
 
-                    w.write(String.valueOf(val).getBytes());
-                    w.write('\n');
+                    writeln(val);
                     break;
             }
         }
 
-        w.flush();
+        flush();
+    }
+
+    private static void writeln(long v)
+    {
+        byte[] s = String.valueOf(v).getBytes();
+        if (oBufSize + s.length + 1 >= BUFFER_SIZE) {
+            flush();
+        }
+        System.arraycopy(s, 0, obuffer, oBufSize, s.length);
+        oBufSize += s.length;
+        obuffer[oBufSize++] = '\n';
+
+    }
+
+    private static void flush()
+    {
+        System.out.write(obuffer, 0, oBufSize);
+        oBufSize = 0;
     }
 
     private static int nextInt() throws IOException {
