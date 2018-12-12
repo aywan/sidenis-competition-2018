@@ -5,17 +5,18 @@ import java.io.IOException;
 public class Main {
 
     final static private int BUFFER_SIZE = 1 << 13;
-    static private byte[] buffer;
-    static private byte[] obuffer;
+
+    static private byte[] iBuffer;
+    static private byte[] oBuffer;
     static private int bufferPointer = 0, bytesRead = 0;
     static private int oBufSize = 0;
+    static private long[][] mt = new long[551][551];
 
     public static void main(String[] args) throws IOException {
-        buffer = new byte[BUFFER_SIZE];
-        obuffer = new byte[BUFFER_SIZE];
+        iBuffer = new byte[BUFFER_SIZE];
+        oBuffer = new byte[BUFFER_SIZE];
 
         int size = nextInt() + 1;
-        long[][] mt = new long[size][size];
 
         int x1, y1, x2, y2;
         long val;
@@ -73,15 +74,15 @@ public class Main {
         if (oBufSize + s.length + 1 >= BUFFER_SIZE) {
             flush();
         }
-        System.arraycopy(s, 0, obuffer, oBufSize, s.length);
+        System.arraycopy(s, 0, oBuffer, oBufSize, s.length);
         oBufSize += s.length;
-        obuffer[oBufSize++] = '\n';
+        oBuffer[oBufSize++] = '\n';
 
     }
 
     private static void flush()
     {
-        System.out.write(obuffer, 0, oBufSize);
+        System.out.write(oBuffer, 0, oBufSize);
         oBufSize = 0;
     }
 
@@ -124,13 +125,13 @@ public class Main {
 
     private static void fillBuffer() throws IOException {
         bufferPointer = 0;
-        bytesRead = System.in.read(buffer,0, BUFFER_SIZE);
+        bytesRead = System.in.read(iBuffer,0, BUFFER_SIZE);
     }
 
     private static byte read() throws IOException {
         if (bufferPointer == bytesRead) {
             fillBuffer();
         }
-        return buffer[bufferPointer++];
+        return iBuffer[bufferPointer++];
     }
 }
