@@ -31,44 +31,39 @@ public class Main {
         int q = nextInt();
 
         for (int j = 0; j < q; j++) {
-            switch (nextInt()) {
+            int op = nextInt();
 
-                case 2:
+            if (op == 2) {
 
-                    y1 = nextInt() + 1;
-                    x1 = nextInt() + 1;
-                    val = nextLong() - mt[x1][y1] + mt[x1][y1 - 1];
+                y1 = nextInt() + 1;
+                x1 = nextInt() + 1;
+                val = nextLong() - mt[x1][y1] + mt[x1][y1 - 1];
 
-                    for (int i = y1; i < size; i++) {
-                        mt[x1][i] += val;
-                    }
+                for (int i = y1; i < size; i++) {
+                    mt[x1][i] += val;
+                }
+            } else if (op == 1) {
 
-                    break;
+                y1 = nextInt();
+                x1 = nextInt();
 
-                case 1:
+                y2 = nextInt() + 1;
+                x2 = nextInt() + 1;
 
-                    y1 = nextInt();
-                    x1 = nextInt();
+                val = 0;
 
-                    y2 = nextInt() + 1;
-                    x2 = nextInt() + 1;
+                for (int i = x1 + 1; i <= x2; i++) {
+                    val += mt[i][y2] - mt[i][y1];
+                }
 
-                    val = 0;
-
-                    for (int i = x1 + 1; i <= x2; i++) {
-                        val += mt[i][y2] - mt[i][y1];
-                    }
-
-                    writeln(val);
-                    break;
+                writeln(val);
             }
         }
 
         flush();
     }
 
-    private static void writeln(long v)
-    {
+    private static void writeln(long v) {
         int p = 19;
         int c = 0;
         boolean neg = v < 0;
@@ -76,7 +71,7 @@ public class Main {
             v = -v;
         }
         while (v > 0) {
-            itoaBuf[p--] = (byte)(v % 10 + '0');
+            itoaBuf[p--] = (byte) (v % 10 + '0');
             v = v / 10;
             c++;
         }
@@ -93,8 +88,7 @@ public class Main {
         oBuffer[oBufPoint++] = '\n';
     }
 
-    private static void flush()
-    {
+    private static void flush() {
         System.out.write(oBuffer, 0, oBufPoint);
         oBufPoint = 0;
     }
@@ -138,7 +132,7 @@ public class Main {
 
     private static void fillBuffer() throws IOException {
         iBufPoint = 0;
-        System.in.read(iBuffer,0, BUFFER_SIZE);
+        System.in.read(iBuffer, 0, BUFFER_SIZE);
     }
 
     private static byte read() throws IOException {
