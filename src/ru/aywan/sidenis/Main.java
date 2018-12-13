@@ -41,8 +41,9 @@ public class Main {
 
                 val = 0;
 
-                for (int i = x1 + 1; i <= x2; i++) {
-                    val += mt[i][y2] - mt[i][y1];
+                while (x1 < x2) {
+                    x1++;
+                    val += mt[x1][y2] - mt[x1][y1];
                 }
 
                 writeln(val);
@@ -52,13 +53,9 @@ public class Main {
                 y1 = nextInt() + 1;
                 x1 = nextInt() + 1;
                 val = nextLong() - mt[x1][y1] + mt[x1][y1 - 1];
-                if (val == 0) {
-                    continue;
+                while (y1 < size) {
+                    mt[x1][y1++] += val;
                 }
-                for (int i = y1; i < size; i++) {
-                    mt[x1][i] += val;
-                }
-
             }
         }
 
