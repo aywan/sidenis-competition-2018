@@ -31,18 +31,7 @@ public class Main {
         int q = nextInt();
 
         for (int j = 0; j < q; j++) {
-            int op = nextInt();
-
-            if (op == 2) {
-
-                y1 = nextInt() + 1;
-                x1 = nextInt() + 1;
-                val = nextLong() - mt[x1][y1] + mt[x1][y1 - 1];
-
-                for (int i = y1; i < size; i++) {
-                    mt[x1][i] += val;
-                }
-            } else if (op == 1) {
+            if (nextNumByte() == '1') {
 
                 y1 = nextInt();
                 x1 = nextInt();
@@ -57,6 +46,19 @@ public class Main {
                 }
 
                 writeln(val);
+
+            } else {
+
+                y1 = nextInt() + 1;
+                x1 = nextInt() + 1;
+                val = nextLong() - mt[x1][y1] + mt[x1][y1 - 1];
+                if (val == 0) {
+                    continue;
+                }
+                for (int i = y1; i < size; i++) {
+                    mt[x1][i] += val;
+                }
+
             }
         }
 
@@ -65,7 +67,6 @@ public class Main {
 
     private static void writeln(long v) {
         int p = 19;
-        int c = 0;
         boolean neg = v < 0;
         if (neg) {
             v = -v;
@@ -73,13 +74,12 @@ public class Main {
         while (v > 0) {
             itoaBuf[p--] = (byte) (v % 10 + '0');
             v = v / 10;
-            c++;
         }
         if (neg) {
             itoaBuf[p--] = '-';
-            c++;
         }
 
+        int c = 19 - p;
         if (oBufPoint + c + 1 >= BUFFER_SIZE) {
             flush();
         }
@@ -107,6 +107,14 @@ public class Main {
         } while (c >= '0' && c <= '9');
 
         return ret;
+    }
+
+    private static byte nextNumByte() throws IOException {
+        byte c = read();
+        while (c <= ' ') {
+            c = read();
+        }
+        return c;
     }
 
     private static long nextLong() throws IOException {
