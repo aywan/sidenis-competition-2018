@@ -4,16 +4,20 @@ import java.io.IOException;
 
 public class Main {
 
-    final static private int BUFFER_SIZE = 1 << 13;
+    final static private int IN_BUFFER_SIZE = 1 << 13;
+    final static private int OUT_BUFFER_SIZE = 1 << 13;
 
-    static private byte[] iBuffer = new byte[BUFFER_SIZE];
-    static private byte[] oBuffer = new byte[BUFFER_SIZE];
+    static private byte[] iBuffer = new byte[IN_BUFFER_SIZE];
+    static private byte[] oBuffer = new byte[OUT_BUFFER_SIZE];
     static private byte[] itoaBuf = new byte[20];
     static private int iBufPoint = 0;
     static private int oBufPoint = 0;
     static private long[][] mt = new long[551][551];
 
     public static void main(String[] args) throws IOException {
+
+        itoaBuf[19] = '\n';
+        fillBuffer();
 
         int size = nextInt() + 1;
 
@@ -63,26 +67,25 @@ public class Main {
     }
 
     private static void writeln(long v) {
-        int p = 19;
+        int p = 18;
         boolean neg = v < 0;
         if (neg) {
             v = -v;
         }
         while (v > 0) {
             itoaBuf[p--] = (byte) (v % 10 + '0');
-            v = v / 10;
+            v /= 10;
         }
         if (neg) {
             itoaBuf[p--] = '-';
         }
 
         int c = 19 - p;
-        if (oBufPoint + c + 1 >= BUFFER_SIZE) {
+        if (oBufPoint + c >= OUT_BUFFER_SIZE) {
             flush();
         }
         System.arraycopy(itoaBuf, p + 1, oBuffer, oBufPoint, c);
         oBufPoint += c;
-        oBuffer[oBufPoint++] = '\n';
     }
 
     private static void flush() {
@@ -137,11 +140,11 @@ public class Main {
 
     private static void fillBuffer() throws IOException {
         iBufPoint = 0;
-        System.in.read(iBuffer, 0, BUFFER_SIZE);
+        System.in.read(iBuffer, 0, IN_BUFFER_SIZE);
     }
 
     private static byte read() throws IOException {
-        if (iBufPoint == BUFFER_SIZE) {
+        if (iBufPoint == IN_BUFFER_SIZE) {
             fillBuffer();
         }
         return iBuffer[iBufPoint++];
