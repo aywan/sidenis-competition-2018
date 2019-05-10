@@ -5,7 +5,7 @@ import java.io.IOException;
 public class Main {
 
     final static private int IN_BUFFER_SIZE = 1 << 13;
-    final static private int OUT_BUFFER_SIZE = 1 << 13;
+    final static private int OUT_BUFFER_SIZE = 1 << 11;
 
     static private byte[] iBuffer = new byte[IN_BUFFER_SIZE];
     static private byte[] oBuffer = new byte[OUT_BUFFER_SIZE];
